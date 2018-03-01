@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def welcome(request):
-    return HttpResponse("Alive@!")
+    return render(request, "tictactoe/welcome.html")
