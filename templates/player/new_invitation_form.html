@@ -7,6 +7,8 @@
     <form action="{% url 'player_new_invitation' %}"
           method="post">
         {{ form }}
+
+        {% csrf_token %}
         <button type="submit">Sign in</button>
     </form>
 {% endblock %}
