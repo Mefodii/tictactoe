@@ -1,14 +1,45 @@
 {% extends "base.html" %}
 
+{% block title %}
+    Home: {{ user.username }}
+{% endblock %}
+
 {% block content %}
-    <h1>Здравствуй {{ user.username }}</h1>
+    <h2 class="text-primary">Здравствуй {{ user.username }}</h2>
     Вот список игр с твоим участием
 
-    <ul>
-        {% for g in games %}
-            <li> Game {{g.id }}: {{g.first_player }} vs {{g.second_player }} </li>
-        {% endfor %}
-    </ul>
 
-    <a href="{% url 'player_new_invitation' %}">Пригласи друга сыграть</a>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Активные игры</h3>
+
+            <ul>
+                {% for g in games %}
+                <li> Game {{g.id }}: {{g.first_player }} vs {{g.second_player }} </li>
+                {% endfor %}
+            </ul>
+
+            <p>Нажмите ниже что бы пригласить кого-нибуть сыграть</p>
+            <p>
+                <a class="btn btn-primary"
+                   href="{% url 'player_new_invitation' %}">Начать игру</a>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <h3>Приглашения</h3>
+
+            {% if invitations %}
+                <div class="list-group">
+                    {% for inv in invitations %}
+                        <a class="list-group-items" href="{% url 'player_accept_invitation' id=inv.id %}">
+                            {{ inv.from_user.username }} пригласил вас сыграть.<br>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Нет приглашений</p>
+            {% endif %}
+        </div>
+    </div>
+
 {% endblock %}
