@@ -1,3 +1,10 @@
+----------==========##########    INST    ##########==========----------
+--  Libs used:
+    pip install django_crispy_strips
+
+--  Other:
+    Bootstraps
+________________________________________________________________________
 ----------==========##########    VENV    ##########==========----------
 --  Create new virtual environment
     python -m venv venv-name
