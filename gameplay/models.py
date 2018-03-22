@@ -49,10 +49,9 @@ class Game(models.Model):
     def new_move(self):
         if self.status not in "FS":
             raise ValueError("Cannot make move on finished game")
-
         return Move(
-            game = self,
-            by_first_player = self.status == "F"
+            game=self,
+            by_first_player=self.status == "F"
         )
 
     def now_move(self, user):
@@ -71,6 +70,20 @@ class Game(models.Model):
     def get_absolute_url(self):
         return reverse("gameplay_detail", args=[self.id])
 
+    def update_after_move(self, move):
+        self.status = self._get_game_status_after_move(move)
+
+    def _get_game_status_after_move(self, move):
+        x, y = move.x, move.y
+        board = self.board()
+        if  (board[y][0] == board[y][1] == board[y][2]) or \
+            (board[0][x] == board[1][x] == board[2][x]) or \
+            (board[0][0] == board[1][1] == board[2][2]) or \
+            (board[0][2] == board[1][1] == board[2][0]):
+            return "W" if move.by_first_player else "L"
+        if self.move_set.count() >= BOARD_SIZE**2:
+            return "D"
+        return "S" if self.status == "F" else "F"
 
     def __str__(self):
         return "{0} vs {1}".format(self.first_player, self.second_player)
