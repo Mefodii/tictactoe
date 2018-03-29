@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-  {{ game.first_player }} против {{ game.second_player }}
+  {{ game.first_player }} vs {{ game.second_player }}
 {% endblock %}
 
 {% block styling %}
@@ -27,15 +27,15 @@
 {% block content %}
     <div class="col-md-5">
         {% if game.status == "F" %}
-            {{ game.first_player}} ходит
+            {{ game.first_player}} move
         {% elif game.status == "S" %}
-            {{ game.second_player}} ходит
+            {{ game.second_player}} move
         {% elif game.status == "W" %}
-            {{ game.first_player}} победил!
+            {{ game.first_player}} wins!
         {% elif game.status == "L" %}
-            {{ game.second_player}} победил!
+            {{ game.second_player}} wins!
         {% elif game.status == "D" %}
-            Ничья
+            Draw
         {% endif %}
         <table class="table table-bordered tictactoe-table">
             {% for row in game.board %}
@@ -62,7 +62,7 @@
                 {{ form | crispy }}
                 {% csrf_token %}
 
-                <button type="submit">Сделать ход</button>
+                <button type="submit">Make the move</button>
             </form>
         </div>
     {% endif %}

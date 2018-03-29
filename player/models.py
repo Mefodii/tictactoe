@@ -8,10 +8,10 @@ class Invitation(models.Model):
     to_user = models.ForeignKey(User,
                                 related_name="invitations_received",
                                 verbose_name="User to invite",
-                                help_text="Выберите игрока с кем хотите сыграть",
+                                help_text="Choose the player",
                                 on_delete=models.CASCADE)
     message = models.CharField(max_length=300,
                                blank=True,
                                verbose_name="Optional Message",
-                               help_text="Пиши что хочешь")
+                               help_text="Some text")
     timestamp = models.DateTimeField(auto_now_add=True)

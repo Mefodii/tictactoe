@@ -5,39 +5,38 @@
 {% endblock %}
 
 {% block content %}
-    <h2 class="text-primary">Здравствуй {{ user.username }}</h2>
-    Вот список игр с твоим участием
+    <h2 class="text-primary">Hello {{ user.username }}</h2>
+    Here is the list of your games
 
 
     <div class="row">
         <div class="col-md-6">
-            <h3>Активные игры</h3>
+            <h3>Active games</h3>
 
             {% include "player/game_list_snippet.html" with games_list=active_games %}
 
-            <h3>Законченые игры</h3>
+            <h3>Finished games</h3>
 
             {% include "player/game_list_snippet.html" with games_list=finished_games %}
 
-            <p>Нажмите ниже что бы пригласить кого-нибуть сыграть</p>
             <p>
                 <a class="btn btn-primary"
-                   href="{% url 'player_new_invitation' %}">Начать игру</a>
+                   href="{% url 'player_new_invitation' %}">Send game invitation</a>
             </p>
         </div>
         <div class="col-md-6">
-            <h3>Приглашения</h3>
+            <h3>Active invitations</h3>
 
             {% if invitations %}
                 <div class="list-group">
                     {% for inv in invitations %}
                         <a class="list-group-items" href="{% url 'player_accept_invitation' id=inv.id %}">
-                            {{ inv.from_user.username }} пригласил вас сыграть.<br>
+                            {{ inv.from_user.username }} invited you to play.<br>
                         </a>
                     {% endfor %}
                 </div>
             {% else %}
-                <p>Нет приглашений</p>
+                <p>No active invitations</p>
             {% endif %}
         </div>
     </div>

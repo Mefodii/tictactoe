@@ -7,13 +7,13 @@
                 {{ game }}
                 {% if game.status not in "FS" %}
                     {% if game.status == "D" %}
-                        Ничья
+                        Draw
                     {% elif game.status == "W" and user == game.first_player %}
-                        Победа
+                        Win
                     {% elif game.status == "L" and user == game.second_player %}
-                        Победа
+                        Win
                     {% else %}
-                        Поражение
+                        Lose
                     {% endif %}
                 {% endif %}
                 <span class="badge">{{ game.move_set.count }}</span>
