@@ -47,4 +47,14 @@ ________________________________________________________________________
     Write new class in app/models.py
     Class uses models.Model
     Make migration
+
+-- Create new page/url django design:
+    Add processing logic to new def function in view.py
+	    • Function must return an html file
+		    ○ Render
+		    ○ Redirect - to another url which uses another view
+	    • Use decorator if needed. Ex: @login_required
+    Add new view to the url.py (in same app)
+	    • Better give a name to the new url
+    Create html file which will be used
 ________________________________________________________________________
