@@ -31,3 +31,20 @@ ________________________________________________________________________
 --  Run migrations
     python manage.py migrate
 ________________________________________________________________________
+----------==========##########   Admin   ##########==========----------
+--  Create new super user:
+    python manage.py createsuperuser
+________________________________________________________________________
+----------==========##########    Dev    ##########==========----------
+--  Create new super user:
+    python manage.py createsuperuser
+
+--  Start new app in project:
+    python manage.py startapp appname
+    Add appname to settings.py -> INSTALLED_APPS = []
+
+--  Add/Update model:
+    Write new class in app/models.py
+    Class uses models.Model
+    Make migration
+________________________________________________________________________
