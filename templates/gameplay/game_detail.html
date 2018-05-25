@@ -21,6 +21,17 @@
             vertical-align: middle !important;
             font-size: 60px;
         }
+
+        .button-cell {
+            width: 80px;
+            height: 80px;
+            background:none;
+            border:none;
+            text-align: center;
+            vertical-align: middle !important;
+            font-size: 60px;
+            outline:none;
+        }
     </style>
 {% endblock styling %}
 
@@ -37,22 +48,24 @@
         {% elif game.status == "D" %}
             Draw
         {% endif %}
-        <table class="table table-bordered tictactoe-table">
-            {% for row in game.board %}
-                <tr>
-                    {% for move in row %}
-                        <td class="tictactoe-cell">
-                            {% if move %}
-                                {% if move.by_first_player %}
-                                    X
+        <table class="table table-bordered tictactoe-table" ng-controller="BoardController">
+                {% for row in game.board %}
+                    <tr>
+                        {% for move in row %}
+                            <td class="tictactoe-cell">
+                                {% if move %}
+                                    {% if move.by_first_player %}
+                                        X
+                                    {% else %}
+                                        O
+                                    {% endif %}
                                 {% else %}
-                                    O
+                                    <button class="button-cell" ng-click="test()"></button>
                                 {% endif %}
-                            {% endif %}
-                        </td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
         </table>
     </div>
 
