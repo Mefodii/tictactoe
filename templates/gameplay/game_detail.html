@@ -52,15 +52,13 @@
                 {% for row in game.board %}
                     <tr>
                         {% for move in row %}
-                            <td class="tictactoe-cell">
+                            <td class="tictactoe-cell" ng-click="test()">
                                 {% if move %}
                                     {% if move.by_first_player %}
                                         X
                                     {% else %}
                                         O
                                     {% endif %}
-                                {% else %}
-                                    <button class="button-cell" ng-click="test()"></button>
                                 {% endif %}
                             </td>
                         {% endfor %}
