@@ -52,7 +52,7 @@
                 {% for row in game.board %}
                     <tr>
                         {% for move in row %}
-                            <td class="tictactoe-cell" ng-click="test()">
+                            <td class="tictactoe-cell" ng-click="test1(x)" ng-init="increment()">
                                 {% if move %}
                                     {% if move.by_first_player %}
                                         X

@@ -11,12 +11,17 @@
         };
 
 
-        $scope.test1 = function(element) {
-            alert($location.absUrl());
+        $scope.test1 = function(x) {
+            alert(x);
         };
+
+        $scope.increment = function() {
+            $scope.x++;
+        }
 
 
         var url = $location.absUrl().split('/')
+        $scope.x = 0;
 
         var index = url[url.length - 2]
         $scope.game = [];
