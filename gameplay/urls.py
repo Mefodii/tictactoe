@@ -4,7 +4,7 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from .views import game_detail, make_move, AllGamesList
-from .api import GameViewSet, MoveViewSet, GamesForUserList
+from .api import GameViewSet, MoveViewSet, GamesForUserList, MovesForGame
 
 router = DefaultRouter()
 router.register("games", GameViewSet)
@@ -18,6 +18,7 @@ urlpatterns = [
          make_move,
          name="gameplay_make_move"),
     path("all_games", AllGamesList.as_view()),
-    path("test/<id>/", GamesForUserList.as_view())
+    path("test/<id>/", GamesForUserList.as_view()),
+    path("moves_for_game/<id>/", MovesForGame.as_view())
 
 ] + router.urls

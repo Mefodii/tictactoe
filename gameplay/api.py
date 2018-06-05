@@ -18,8 +18,16 @@ class MoveViewSet(ModelViewSet):
 
 
 class GamesForUserList(generics.ListAPIView):
-    serializer_class =  GameSerializer
+    serializer_class = GameSerializer
 
     def get_queryset(self):
         user = int(self.kwargs["id"])
         return Game.objects.games_for_user(user)
+
+
+class MovesForGame(generics.ListAPIView):
+    serializer_class = MoveSerializer
+
+    def get_queryset(self):
+        game_id = int(self.kwargs["id"])
+        return Game.objects.get(id=game_id).move_set.all()
