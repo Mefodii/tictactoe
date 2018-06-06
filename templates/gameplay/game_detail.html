@@ -65,6 +65,12 @@
                     </tr>
                 {% endfor %}
         </table>
+        <table class="table table-bordered tictactoe-table" ng-controller="BoardController">
+                <tr ng-repeat="x in [0, 1, 2]">
+                    <td class="tictactoe-cell" ng-click="test1($parent.$index, $index)" ng-repeat="y in [0, 1, 2]">
+                    </td>
+                </tr>
+        </table>
     </div>
 
     {% if form %}

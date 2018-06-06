@@ -11,8 +11,8 @@
         };
 
 
-        $scope.test1 = function(x) {
-            alert(x);
+        $scope.test1 = function(x, y) {
+            alert(x + ", " + y);
         };
 
         $scope.increment = function() {
