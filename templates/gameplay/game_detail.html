@@ -48,11 +48,11 @@
         {% elif game.status == "D" %}
             Draw
         {% endif %}
-        <table class="table table-bordered tictactoe-table" ng-controller="BoardController">
+        <table class="table table-bordered tictactoe-table">
                 {% for row in game.board %}
                     <tr>
                         {% for move in row %}
-                            <td class="tictactoe-cell" ng-click="test1(x)" ng-init="increment()">
+                            <td class="tictactoe-cell">
                                 {% if move %}
                                     {% if move.by_first_player %}
                                         X
@@ -65,12 +65,19 @@
                     </tr>
                 {% endfor %}
         </table>
+        {% verbatim %}
         <table class="table table-bordered tictactoe-table" ng-controller="BoardController">
                 <tr ng-repeat="x in [0, 1, 2]">
-                    <td class="tictactoe-cell" ng-click="test1($parent.$index, $index)" ng-repeat="y in [0, 1, 2]">
+                    <td class="tictactoe-cell"
+                        ng-click="test1($parent.$index, $index)"
+                        ng-repeat="y in [0, 1, 2]"
+                        ng-model="cellValue"
+                        ng-init="initCells()">
+                        {{cellValue}}
                     </td>
                 </tr>
         </table>
+        {% endverbatim %}
     </div>
 
     {% if form %}
