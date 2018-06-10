@@ -55,7 +55,7 @@ class Game(models.Model):
         )
 
     def now_move(self, user):
-        if (self.is_users_move(user)):
+        if self.is_users_move(user):
             return user
         else:
             if user == self.first_player:
@@ -99,7 +99,7 @@ class Move(models.Model):
                     MaxValueValidator(BOARD_SIZE-1)]
     )
     comment = models.CharField(max_length=300, blank=True)
-    by_first_player = models.BooleanField(editable=False)
+    by_first_player = models.BooleanField()
 
     def __eq__(self, other):
         if other is None:
@@ -111,4 +111,4 @@ class Move(models.Model):
         self.game.update_after_move(self)
         self.game.save()
 
-    game = models.ForeignKey(Game, on_delete=models.CASCADE, editable=False)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)

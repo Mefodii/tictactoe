@@ -6,6 +6,7 @@ from django.views.generic import ListView
 from .models import Game
 from .forms import MoveForm
 
+
 # Create your views here.
 @login_required
 def game_detail(request, id):
@@ -17,6 +18,7 @@ def game_detail(request, id):
     return render(request,
                   "gameplay/game_detail.html",
                   context)
+
 
 @login_required
 def make_move(request, id):
