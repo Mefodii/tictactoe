@@ -6,17 +6,31 @@
 
     function BoardController($scope, $http, $location) {
 
-        function getMoves(game_id) {
+        //totul ce e legat de http poate fi mutat intr-un service
+        $http.defaults.xsrfHeaderName = "X-CSRFToken";
+        $http.defaults.xsrfCookieName = "csrftoken";
+
+        function getMovesHttp(game_id) {
             $http.get("/games/moves_for_game/" + game_id + "/").then(function(response){
-                buildBoardValues(response.data);
+                return response.data;
             });
         }
 
-        function getGame(game_id){
+        function getGameHttp(){
             $http.get("/games/games/" + index + "/").then(function(response){
-                $scope.game = response.data;
-                $scope.status_message = refreshStatus($scope.game.status);
+                return response.data;
             });
+        }
+
+        function makeMoveHttp(move) {
+          return $http.post("/games/make_move1/", move).then(
+              function success(response) {
+                return response.data;
+              },
+              function error(){
+                  alert("Could not insert");
+              }
+          )
         }
 
         function refreshStatus(status){
@@ -87,19 +101,26 @@
                 game: parseInt(index)
             };
 
-            $http.post("/games/make_move1/", move)
-                .then(function(response){
-                    cell.val = calculateVal(response.data.by_first_player);
-                    getGame($scope.game.id);
-                },
-                function(){
-                    alert("Could not insert");
-                });
+          makeMoveHttp(move).then(function(data) {
+            cell.val = calculateVal(data.by_first_player);
+            getGame($scope.game.id);
+          });
         }
 
-        $http.defaults.xsrfHeaderName = "X-CSRFToken";
-        $http.defaults.xsrfCookieName = "csrftoken";
+        function getGame() {
+          getGameHttp().then(function(data) {
+            $scope.game = data;
+            $scope.status_message = refreshStatus($scope.game.status);
+          });
+        }
 
+        function getMoves(index) {
+          getMovesHttp(index).then(function(data) {
+            buildBoardValues(data);
+          });
+        }
+
+        //GAME INIT
         $scope.game = [];
         $scope.board = [];
         $scope.status_message = "test";
@@ -107,7 +128,7 @@
         var url = $location.absUrl().split('/');
         var index = url[url.length - 2];
 
-        getGame(index);
+        getGame();
         getMoves(index);
     }
 }());
