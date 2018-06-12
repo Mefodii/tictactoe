@@ -6,18 +6,14 @@
 
     function BoardController($scope, $http, $location) {
 
-        //totul ce e legat de http poate fi mutat intr-un service
-        $http.defaults.xsrfHeaderName = "X-CSRFToken";
-        $http.defaults.xsrfCookieName = "csrftoken";
-
         function getMovesHttp(game_id) {
-            $http.get("/games/moves_for_game/" + game_id + "/").then(function(response){
+            return $http.get("/games/moves_for_game/" + game_id + "/").then(function(response){
                 return response.data;
             });
         }
 
-        function getGameHttp(){
-            $http.get("/games/games/" + index + "/").then(function(response){
+        function getGameHttp(game_id){
+            return $http.get("/games/games/" + game_id + "/").then(function(response){
                 return response.data;
             });
         }
@@ -98,37 +94,39 @@
             var move = {
                 x: cell.x,
                 y: cell.y,
-                game: parseInt(index)
+                game: parseInt(current_game_id)
             };
 
-          makeMoveHttp(move).then(function(data) {
-            cell.val = calculateVal(data.by_first_player);
-            getGame($scope.game.id);
-          });
+            makeMoveHttp(move).then(function(data) {
+                cell.val = calculateVal(data.by_first_player);
+                getGame();
+            });
         }
 
         function getGame() {
-          getGameHttp().then(function(data) {
+          getGameHttp(current_game_id).then(function(data) {
             $scope.game = data;
             $scope.status_message = refreshStatus($scope.game.status);
           });
         }
 
-        function getMoves(index) {
-          getMovesHttp(index).then(function(data) {
+        function getMoves() {
+          getMovesHttp(current_game_id).then(function(data) {
             buildBoardValues(data);
           });
         }
 
-        //GAME INIT
+        $http.defaults.xsrfHeaderName = "X-CSRFToken";
+        $http.defaults.xsrfCookieName = "csrftoken";
+
         $scope.game = [];
         $scope.board = [];
         $scope.status_message = "test";
 
         var url = $location.absUrl().split('/');
-        var index = url[url.length - 2];
+        var current_game_id = url[url.length - 2];
 
         getGame();
-        getMoves(index);
+        getMoves();
     }
 }());
