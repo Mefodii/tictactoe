@@ -24,7 +24,7 @@
                 return response.data;
               },
               function error(){
-                  alert("Could not insert");
+                  throw "Oh, no, the move is not valid";
               }
           )
         }
