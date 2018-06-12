@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.shortcuts import get_object_or_404
 
 # Create your models here.
 
@@ -98,6 +99,14 @@ class Game(models.Model):
         return "{0} vs {1}".format(self.first_player, self.second_player)
 
 
+class MoveQuerySet(models.QuerySet):
+    def move_for_coords(self, game, x, y):
+
+        return self.filter(
+            Q(x=x) & Q(y=y) & Q(game=game)
+        )
+
+
 class Move(models.Model):
     x = models.IntegerField(
         validators=[MinValueValidator(0),
@@ -119,5 +128,17 @@ class Move(models.Model):
         super(Move, self).save(*args, **kwargs)
         self.game.update_after_move(self)
         self.game.save()
+
+    @staticmethod
+    def move_exists(game_id, x, y):
+        # game = get_object_or_404(Game, pk=game_id)
+        # if game:
+        # move = Move.objects.move_for_coords(game_id, x, y)
+        # if move:
+        #     return True
+        # else:
+        return False
+        # return False
+
 
     game = models.ForeignKey(Game, on_delete=models.CASCADE)

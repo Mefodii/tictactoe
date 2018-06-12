@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from django.shortcuts import get_object_or_404
+
 from .models import Game, Move
 
 
@@ -14,3 +16,10 @@ class MoveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Move
         fields = '__all__'
+
+    def validate(self, attrs):
+        game = attrs['game']
+        x, y = attrs['x'], attrs['y']
+        if game.board()[y][x] is not None:
+            raise serializers.ValidationError("Cell not empty")
+        return attrs
