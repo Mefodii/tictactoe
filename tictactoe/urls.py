@@ -16,11 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from rest_framework.routers import DefaultRouter
+
 from .views import welcome
+from .api import UserViewSet, current_user
+
+router = DefaultRouter()
+router.register("users", UserViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('player/', include("player.urls")),
     path('games/', include("gameplay.urls")),
+    path('current_user/', current_user),
     path('', welcome, name="tictactoe_welcome"),
-]
+] + router.urls

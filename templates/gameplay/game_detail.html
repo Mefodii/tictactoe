@@ -13,8 +13,17 @@
             border-width: 2px
         }
 
-        .tictactoe-cell {
+        .tictactoe-cell-active {
             background-color: #debb27;
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            vertical-align: middle !important;
+            font-size: 60px;
+        }
+
+        .tictactoe-cell {
+            background-color: #eed374;
             width: 100px;
             height: 100px;
             text-align: center;
@@ -32,23 +41,26 @@
             font-size: 60px;
             outline:none;
         }
+
+        .status {
+            font-size: 20px;
+        }
     </style>
 {% endblock styling %}
 
 {% block content %}
     <div class="col-md-5" ng-controller="BoardController">
         {% verbatim %}
-        {{ status_message }}
+        <div class="badge status">{{ status.message }}</div>
         <table class="table table-bordered tictactoe-table" >
                 <tr ng-repeat="rows in board">
-                    <td class="tictactoe-cell"
-                        ng-click="test1(cell)"
+                    <td ng-class="cell.class"
+                        ng-click="cellClick(cell)"
                         ng-repeat="cell in rows">
                         {{ cell.val }}
                     </td>
                 </tr>
         </table>
-        <p ng-repeat="move in moves">{{ move.id }}</p>
         {% endverbatim %}
     </div>
 {% endblock %}
