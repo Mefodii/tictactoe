@@ -2,9 +2,32 @@
     "use strict";
 
     angular.module("tictactoe.demo", [])
-        .controller("BoardController", [ "$scope", "$http", "$location", BoardController]);
+        .controller("BoardController", [ "$scope", "$http", "$location", "$interval", "$q", BoardController]);
 
-    function BoardController($scope, $http, $location) {
+    function BoardController($scope, $http, $location, $interval, $q) {
+//      INTERVALS
+
+        var gameStatusCheckPromise = null;
+
+        function startPollingGameStatusUpdate(){
+            stopPollingGameStatusUpdate();
+            gameStatusCheckPromise=$interval(checkGameStatusUpdate, 2000);
+        }
+
+        function stopPollingGameStatusUpdate(){
+            $interval.cancel(gameStatusCheckPromise);
+            gameStatusCheckPromise = null;
+        }
+
+        function checkGameStatusUpdate() {
+            getGameHttp(current_game_id).then(function(data) {
+                if($scope.status.gameStatus != data.status){
+                    stopPollingGameStatusUpdate();
+                    init();
+                }
+            });
+        }
+
 
 //      HTTP
         function getMovesHttp(game_id) {
@@ -21,6 +44,12 @@
 
         function getUserHttp(id){
             return $http.get("/users/" + id + "/").then(function(response){
+                return response.data;
+            });
+        }
+
+        function getGameStatusHttp(id){
+            return $http.get("/games/status/" + id + "/").then(function(response){
                 return response.data;
             });
         }
@@ -45,7 +74,7 @@
 //      GETTERS
 
         function getGame() {
-          getGameHttp(current_game_id).then(function(data) {
+          return getGameHttp(current_game_id).then(function(data) {
             $scope.game = data;
             refreshStatus();
           });
@@ -58,7 +87,7 @@
         }
 
         function getMoves() {
-          getMovesHttp(current_game_id).then(function(data) {
+          return getMovesHttp(current_game_id).then(function(data) {
             buildBoardValues(data);
           });
         }
@@ -102,8 +131,11 @@
 
             makeMoveHttp(move).then(function(data) {
                 cell.val = calculateVal(data.by_first_player);
-                getGame();
-                boardInactive();
+                getGame().then(function () {
+                    if($scope.status.gameStatus == "F" | $scope.status.gameStatus == "S"){
+                        startPollingGameStatusUpdate();
+                    }
+                });
             });
         }
 
@@ -134,6 +166,12 @@
             $scope.status.message = refreshStatusMessage($scope.status.gameStatus,
                                                         $scope.status.firstPlayerName, $scope.status.secondPlayerName);
             $scope.status.iMove = isMyMove($scope.status);
+            if($scope.status.iMove){
+                boardActive();
+            }
+            else{
+                boardInactive();
+            }
         }
 
         function refreshStatusMessage(status, firstPlayerName, secondPlayerName){
@@ -193,10 +231,18 @@
             return val;
         }
 
+        function isEmptyCell(cell){
+            var value = cell.val;
+            if (value != "X" & value != "O"){
+                return true;
+            }
+            return false;
+        }
+
 //      HTML
 
         $scope.cellClick = function(cell) {
-            if($scope.status.iMove){
+            if($scope.status.iMove & isEmptyCell(cell)){
                 makeMove(cell);
             }
         };
@@ -236,15 +282,17 @@
         }
 
         function initializeGame() {
-          getGameHttp(current_game_id).then(function(data) {
+          return getGameHttp(current_game_id).then(function(data) {
             $scope.game = data;
             initializeStatus($scope.game);
           });
         }
 
         function init(){
-            initializeGame();
-            getMoves();
+            $q.all(initializeGame(), getMoves()).then(function() {
+                refreshStatus();
+                console.log($scope.game.status);
+            });
         }
 
         $http.defaults.xsrfHeaderName = "X-CSRFToken";
