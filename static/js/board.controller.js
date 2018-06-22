@@ -20,8 +20,8 @@
         }
 
         function checkGameStatusUpdate() {
-            getGameHttp(current_game_id).then(function(data) {
-                if($scope.status.gameStatus != data.status){
+            getIsMyMoveStatusHttp(current_game_id).then(function(data) {
+                if(data){
                     stopPollingGameStatusUpdate();
                     opponentMoved();
                 }
@@ -29,7 +29,14 @@
         }
 
 
+
 //      HTTP
+        function getIsMyMoveStatusHttp(gameId) {
+            return $http.get("/games/is_my_move/", {params: {game: gameId}}).then(function(response){
+                return response.data;
+            });
+        }
+
         function getMovesHttp(game_id) {
             return $http.get("/games/moves_for_game/" + game_id + "/").then(function(response){
                 return response.data;
@@ -157,10 +164,10 @@
             var status_message = "";
             var str_status = String(status);
             if (str_status.indexOf("F") >= 0){
-                status_message = firstPlayerName + " move";
+                status_message = firstPlayerName + " move (X)";
             }
             else if(str_status.indexOf("S") >= 0){
-                status_message = secondPlayerName + " move";
+                status_message = secondPlayerName + " move (O)";
             }
             else if(str_status.indexOf("W") >= 0){
                 status_message = firstPlayerName + " wins";
@@ -231,6 +238,7 @@
             makeMoveHttp(move).then(function(data) {
                 cell.val = calculateVal(data.by_first_player);
                 refreshGame().then(function () {
+                    $scope.board[move.y][move.x].class = $scope.inactiveCellClass;
                     refreshStatus();
                     if($scope.status.gameStatus == "F" || $scope.status.gameStatus == "S"){
                         startPollingGameStatusUpdate();

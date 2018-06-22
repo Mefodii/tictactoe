@@ -19,9 +19,5 @@ class UserViewSet(ModelViewSet):
 @login_required
 def current_user(request):
     if request.method == 'GET':
-        # user = get_object_or_404(User, pk=id)
         serializer = UserSerializer(request.user)
-        # if serializer.is_valid():
-        #     serializer.save()
-        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.data, status=status.HTTP_200_OK)
