@@ -10,8 +10,18 @@
 
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6" ng-controller="GameListController">
             <h3>Active games</h3>
+
+            {% verbatim %}
+            <div class="list-group bg-info">
+                <a class="list-group-item list-group-item-info"
+                   href="{{ game.absoluteUrl }}" ng-repeat="game in activeGames">
+                    {{ game.str }}
+                    <span class="badge">{{ game.movesCount }}</span>
+                </a>
+            </div>
+            {% endverbatim %}
 
             {% include "player/game_list_snippet.html" with games_list=active_games %}
 
