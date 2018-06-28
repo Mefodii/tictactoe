@@ -4,6 +4,7 @@ from django.conf.urls import url
 from django.contrib.auth.views import LoginView, LogoutView
 
 from .views import home, new_invitation, accept_invitation, SignUpView
+from .api import active_games_for_user, finished_games_for_user
 
 urlpatterns = [
     path('home', home, name="player_home"),
@@ -16,6 +17,8 @@ urlpatterns = [
     path("accept_invitation/<int:id>/",
          accept_invitation,
          name="player_accept_invitation"),
-    path("signup", SignUpView.as_view(), name="player_signup")
+    path("signup", SignUpView.as_view(), name="player_signup"),
+    path("active_games_for_user/", active_games_for_user),
+    path("finished_games_for_user/", finished_games_for_user),
 
 ]

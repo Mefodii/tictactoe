@@ -24,24 +24,24 @@
         <script src="{% static 'js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' %}"></script>
     </head>
     <body ng-app="tictactoe.demo">
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="/">Django Test</a>
-        </div>
-        <ul class="nav navbar-nav navbar-right">
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'player_logout' %}">Logout</a></li>
-            {% else %}
-                <li><a href="{% url 'player_login' %}">Login</a></li>
-                <li><a href="{% url 'player_signup' %}">Signup</a></li>
-            {% endif %}
-        </ul>
-      </div>
-    </nav>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="/">Django Test</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'player_logout' %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'player_login' %}">Login</a></li>
+                    <li><a href="{% url 'player_signup' %}">Signup</a></li>
+                {% endif %}
+            </ul>
+          </div>
+        </nav>
 
 
-        <div class="container" ng-app="scrumboard.demo">
+        <div class="container">
 
             {% block content %}
             {% endblock %}
@@ -55,6 +55,8 @@
         <script src="{% static 'js/main.js' %}"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
+        <script src="{% static 'js/tictactoe.module.js' %}"></script>
         <script src="{% static 'js/board.controller.js' %}"></script>
+        <script src="{% static 'js/game.list.controller.js' %}"></script>
     </body>
 </html>

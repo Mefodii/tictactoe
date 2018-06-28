@@ -1,7 +1,7 @@
 (function(){
     "use strict";
 
-    angular.module("tictactoe.demo", [])
+    angular.module("tictactoe.demo")
         .controller("BoardController", [ "$scope", "$http", "$location", "$interval", "$q", BoardController]);
 
     function BoardController($scope, $http, $location, $interval, $q) {
@@ -292,14 +292,13 @@
                     }
                     else{
                         boardInactive();
-                        startPollingGameStatusUpdate();
+                        if($scope.status.gameStatus == "F" || $scope.status.gameStatus == "S"){
+                            startPollingGameStatusUpdate();
+                        }
                     }
                 });
             });
         }
-
-        $http.defaults.xsrfHeaderName = "X-CSRFToken";
-        $http.defaults.xsrfCookieName = "csrftoken";
 
         $scope.game = [];
         $scope.moves = [];

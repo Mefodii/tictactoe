@@ -4,6 +4,18 @@ from .models import Game, Move
 
 
 class GameSerializer(serializers.ModelSerializer):
+    string = serializers.SerializerMethodField()
+    moves_count = serializers.SerializerMethodField()
+    absolute_url = serializers.SerializerMethodField()
+
+    def get_absolute_url(self, game):
+        return str(game.get_absolute_url())
+
+    def get_moves_count(self, game):
+        return int(game.move_set.count())
+
+    def get_string(self, game):
+        return str(game)
 
     class Meta:
         model = Game

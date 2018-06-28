@@ -11,23 +11,34 @@
 
     <div class="row">
         <div class="col-md-6" ng-controller="GameListController">
+            {% verbatim %}
             <h3>Active games</h3>
 
-            {% verbatim %}
             <div class="list-group bg-info">
                 <a class="list-group-item list-group-item-info"
-                   href="{{ game.absoluteUrl }}" ng-repeat="game in activeGames">
-                    {{ game.str }}
-                    <span class="badge">{{ game.movesCount }}</span>
+                   href="{{ game.absolute_url }}" ng-repeat="game in activeGames">
+                    {{ game.string }}
+                    <span class="badge">{{ game.moves_count }}</span>
                 </a>
             </div>
-            {% endverbatim %}
-
-            {% include "player/game_list_snippet.html" with games_list=active_games %}
 
             <h3>Finished games</h3>
 
-            {% include "player/game_list_snippet.html" with games_list=finished_games %}
+            <div class="list-group bg-info">
+                <a class="list-group-item list-group-item-info"
+                   href="{{ game.absolute_url }}" ng-repeat="game in finishedGames">
+                    {{ game.string }}
+                    <span class="badge">{{ game.moves_count }}</span>
+                </a>
+            </div>
+
+            {% endverbatim %}
+
+            <!--{% include "player/game_list_snippet.html" with games_list=active_games %}-->
+
+            <!--<h3>Finished games</h3>-->
+
+            <!--{% include "player/game_list_snippet.html" with games_list=finished_games %}-->
 
             <p>
                 <a class="btn btn-primary"
