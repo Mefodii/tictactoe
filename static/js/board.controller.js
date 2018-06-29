@@ -191,6 +191,7 @@
                         x: j,
                         y: i,
                         val: "",
+                        tempVal: "",
                         class: $scope.inactiveCellClass
                     });
                 }
@@ -222,8 +223,21 @@
 
 //      HTML
 
+        $scope.mouseOverCell = function(cell){
+            if($scope.status.iMove & isEmptyCell(cell)){
+                cell.tempVal = $scope.status.myChar;
+            }
+        }
+
+        $scope.mouseLeaveCell = function(cell){
+            if($scope.status.iMove & isEmptyCell(cell)){
+                cell.tempVal = "";
+            }
+        }
+
         $scope.cellClick = function(cell) {
             if($scope.status.iMove & isEmptyCell(cell)){
+                cell.tempVal = "";
                 makeMove(cell);
             }
         };
@@ -257,6 +271,7 @@
                     firstPlayerId: -1,
                     secondPlayerId: -1,
                     myId: -1,
+                    myChar: "",
                     iMove: false
                 };
 
@@ -277,6 +292,12 @@
                 status.secondPlayerName = result[2];
                 status.message = refreshStatusMessage(status.gameStatus,
                                                         status.firstPlayerName, status.secondPlayerName);
+                if(status.myId == status.firstPlayerId){
+                    status.myChar = "X";
+                }
+                else{
+                    status.myChar = "O";
+                }
 
                 return status;
             });
@@ -303,7 +324,7 @@
         $scope.game = [];
         $scope.moves = [];
         $scope.board = [];
-        $scope.status = {};
+        $scope.status = [];
         $scope.inactiveCellClass = "tictactoe-cell"
         $scope.activeCellClass = "tictactoe-cell-active"
 

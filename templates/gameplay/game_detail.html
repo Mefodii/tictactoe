@@ -9,19 +9,18 @@
     {{ block.super }}
     <style type="text/css">
         table {
-          width: 100%;
+          width: 300px;
           border-collapse: collapse;
         }
         td {
-          width: 33.333%;
+          width: 100px;
+          height: 100px;
           border: 2px solid #222;
-            text-align: center;
-            vertical-align: middle !important;
-        }
-        td::after {
-          content: '';
-          display: block;
-          margin-top: 100%;
+          text-align: center;
+          vertical-align: middle !important;
+            background: radial-gradient(#243B55, #141E30);
+	        font-size: 60px;
+	        color: white;
         }
         td:first-of-type {
           border-left-color: transparent;
@@ -39,14 +38,22 @@
         }
 
         .tictactoe-cell-active {
-            background: radial-gradient(#a8ff78, #78ffd6);
+	        cursor: pointer;
+        }
+
+        .tictactoe-cell-active:hover {
+            background: #3d4250;
+            transition: all 0.2s;
+            opacity: 0.3;
+            -webkit-transition: all 0.2s;
+            -moz-transition: all 0.2s;
         }
 
         .tictactoe-cell {
-            background: radial-gradient(#a8ff78, #78ffd6);
         }
 
         .status {
+            background: radial-gradient(#243B55, #141E30);
             font-size: 20px;
         }
     </style>
@@ -59,9 +66,11 @@
         <table>
             <tr ng-repeat="rows in board">
                 <td ng-class="cell.class"
+                    ng-mouseover="mouseOverCell(cell)"
+                    ng-mouseleave="mouseLeaveCell(cell)"
                     ng-click="cellClick(cell)"
                     ng-repeat="cell in rows">
-                    {{ cell.val }}
+                    {{ cell.val + cell.tempVal }}
                 </td>
             </tr>
         </table>
