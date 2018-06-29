@@ -8,38 +8,42 @@
 {% block styling %}
     {{ block.super }}
     <style type="text/css">
-        .tictactoe-table{
-            width: 300px;
-            border-width: 2px
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        td {
+          width: 33.333%;
+          border: 2px solid #222;
+            text-align: center;
+            vertical-align: middle !important;
+        }
+        td::after {
+          content: '';
+          display: block;
+          margin-top: 100%;
+        }
+        td:first-of-type {
+          border-left-color: transparent;
+          border-top-color: transparent;
+        }
+        td:nth-of-type(2) {
+          border-top-color: transparent;
+        }
+        td:nth-of-type(3) {
+          border-right-color: transparent;
+          border-top-color: transparent;
+        }
+        tr:nth-of-type(3) td {
+          border-bottom-color: transparent;
         }
 
         .tictactoe-cell-active {
-            background-color: #debb27;
-            width: 100px;
-            height: 100px;
-            text-align: center;
-            vertical-align: middle !important;
-            font-size: 60px;
+            background: radial-gradient(#a8ff78, #78ffd6);
         }
 
         .tictactoe-cell {
-            background-color: #eed374;
-            width: 100px;
-            height: 100px;
-            text-align: center;
-            vertical-align: middle !important;
-            font-size: 60px;
-        }
-
-        .button-cell {
-            width: 80px;
-            height: 80px;
-            background:none;
-            border:none;
-            text-align: center;
-            vertical-align: middle !important;
-            font-size: 60px;
-            outline:none;
+            background: radial-gradient(#a8ff78, #78ffd6);
         }
 
         .status {
@@ -52,14 +56,14 @@
     <div class="col-md-5" ng-controller="BoardController">
         {% verbatim %}
         <div class="badge status">{{ status.message }}</div>
-        <table class="table table-bordered tictactoe-table" >
-                <tr ng-repeat="rows in board">
-                    <td ng-class="cell.class"
-                        ng-click="cellClick(cell)"
-                        ng-repeat="cell in rows">
-                        {{ cell.val }}
-                    </td>
-                </tr>
+        <table>
+            <tr ng-repeat="rows in board">
+                <td ng-class="cell.class"
+                    ng-click="cellClick(cell)"
+                    ng-repeat="cell in rows">
+                    {{ cell.val }}
+                </td>
+            </tr>
         </table>
         {% endverbatim %}
     </div>
