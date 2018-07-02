@@ -1,0 +1,12 @@
+<div class="badge status">{{ status.message }}</div>
+<table>
+    <tr ng-repeat="rows in board">
+        <td ng-class="cell.class"
+            ng-mouseover="mouseOverCell(cell)"
+            ng-mouseleave="mouseLeaveCell(cell)"
+            ng-click="cellClick(cell)"
+            ng-repeat="cell in rows">
+            {{ cell.val + cell.tempVal }}
+        </td>
+    </tr>
+</table>

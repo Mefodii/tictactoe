@@ -325,8 +325,8 @@
         $scope.moves = [];
         $scope.board = [];
         $scope.status = [];
-        $scope.inactiveCellClass = "tictactoe-cell"
-        $scope.activeCellClass = "tictactoe-cell-active"
+        $scope.inactiveCellClass = "tictactoe-cell";
+        $scope.activeCellClass = "tictactoe-cell-active";
 
         var url = $location.absUrl().split('/');
         var current_game_id = url[url.length - 2];

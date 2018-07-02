@@ -38,7 +38,7 @@
         $scope.activeGames = [];
         $scope.finishedGames = [];
 
-        init()
+        init();
 
     }
 }());
