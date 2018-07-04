@@ -16,9 +16,10 @@
 
             <div class="list-group bg-info">
                 <a class="list-group-item list-group-item-info"
-                   href="{{ game.absolute_url }}" ng-repeat="game in activeGames">
-                    {{ game.string }}
-                    <span class="badge">{{ game.moves_count }}</span>
+                   href="{{ gameObj.absolute_url }}"
+                   ng-repeat="gameObj in activeGames">
+                    {{ gameObj.string }}
+                    <span class="badge">{{ gameObj.moves_count }}</span><br>
                 </a>
             </div>
 
@@ -43,10 +44,12 @@
             <h3>Active invitations</h3>
 
             {% if invitations %}
-                <div class="list-group">
+                <div class="list-group bg-info">
                     {% for inv in invitations %}
-                        <a class="list-group-items" href="{% url 'player_accept_invitation' id=inv.id %}">
-                            {{ inv.from_user.username }} invited you to play.<br>
+                        <a class="list-group-item list-group-item-info" href="{% url 'player_accept_invitation' id=inv.id %}">
+                            {{ inv.from_user.username }} invited you to play.
+                        <span class="badge">N</span>
+                        <span class="badge">Y</span><br>
                         </a>
                     {% endfor %}
                 </div>

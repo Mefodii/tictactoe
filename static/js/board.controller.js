@@ -20,7 +20,7 @@
         }
 
         function checkGameStatusUpdate() {
-            getIsMyMoveStatusHttp(current_game_id).then(function(data) {
+            getIsMyMoveStatusHttp($scope.current_game_id).then(function(data) {
                 if(data){
                     stopPollingGameStatusUpdate();
                     opponentMoved();
@@ -81,13 +81,13 @@
 //      GETTERS
 
         function refreshGame() {
-          return getGameHttp(current_game_id).then(function(data) {
+          return getGameHttp($scope.current_game_id).then(function(data) {
             $scope.game = data;
           });
         }
 
         function refreshMoves() {
-          return getMovesHttp(current_game_id).then(function(data) {
+          return getMovesHttp($scope.current_game_id).then(function(data) {
             $scope.moves = data;
           });
         }
@@ -242,11 +242,22 @@
             }
         };
 
+        $scope.separateLoad = function() {
+            var url = $location.absUrl().split('/');
+            $scope.current_game_id = url[url.length - 2];
+            init();
+        }
+
+        $scope.ingameLoad = function(gameIndex) {
+            $scope.current_game_id = gameIndex;
+            init();
+        }
+
         function makeMove(cell) {
             var move = {
                 x: cell.x,
                 y: cell.y,
-                game: parseInt(current_game_id)
+                game: parseInt($scope.current_game_id)
             };
 
             makeMoveHttp(move).then(function(data) {
@@ -328,9 +339,6 @@
         $scope.inactiveCellClass = "tictactoe-cell";
         $scope.activeCellClass = "tictactoe-cell-active";
 
-        var url = $location.absUrl().split('/');
-        var current_game_id = url[url.length - 2];
-
-        init();
+        $scope.current_game_id;
     }
 }());
