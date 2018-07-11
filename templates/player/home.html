@@ -19,7 +19,7 @@
                    href="{{ gameObj.absolute_url }}"
                    ng-repeat="gameObj in activeGames">
                     {{ gameObj.string }}
-                    <span class="badge">{{ gameObj.moves_count }}</span><br>
+                    <span class="badge badge-move">{{ gameObj.moves_count }}</span><br>
                 </a>
             </div>
 
@@ -29,7 +29,7 @@
                 <a class="list-group-item list-group-item-info"
                    href="{{ game.absolute_url }}" ng-repeat="game in finishedGames">
                     {{ game.string }}
-                    <span class="badge">{{ game.moves_count }}</span>
+                    <span class="badge badge-move">{{ game.moves_count }}</span>
                 </a>
             </div>
 
@@ -38,14 +38,22 @@
         <div class="col-md-6">
             <h3>Active invitations</h3>
                 <div class="list-group bg-info">
-                        <a class="list-group-item list-group-item-info"
-                           ng-repeat="invitation in activeInvitations">
-                            {{ invitation.from_user_username }} invited you to play.
-                        <span class="badge" ng-click="declineInvitation(invitation)">N</span>
-                        <span class="badge" ng-click="acceptInvitation(invitation)">Y</span><br>
-                        </a>
-            {% endverbatim %}
+                    <a class="list-group-item list-group-item-info"
+                       ng-repeat="invitation in activeInvitations">
+                        {{ invitation.from_user_username }} invited you to play.
+                    <span class="badge invitation-no-button" ng-click="declineInvitation(invitation)">N</span>
+                    <span class="badge invitation-yes-button" ng-click="acceptInvitation(invitation)">Y</span><br>
+                    </a>
                 </div>
+            <h3>Waiting for response</h3>
+                <div class="list-group bg-info">
+                    <a class="list-group-item list-group-item-info"
+                       ng-repeat="invitation in waitingResponseInvitations">
+                        Waiting response from {{ invitation.to_user_username }}.
+                    <span class="badge invitation-no-button" ng-click="cancelInvitation(invitation)">X</span>
+                    </a>
+                </div>
+            {% endverbatim %}
             <p>
                 <a class="btn btn-primary"
                    href="{% url 'player_new_invitation' %}">Send game invitation</a>

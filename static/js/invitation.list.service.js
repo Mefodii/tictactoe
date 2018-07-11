@@ -6,6 +6,7 @@
 
     function InvitationListService($http) {
         this.getActiveInvitations = getActiveInvitations;
+        this.getWaitingResponseInvitations = getWaitingResponseInvitations;
         this.acceptInvitation = acceptInvitation;
         this.declineInvitation = declineInvitation;
 
@@ -19,6 +20,13 @@
 
         function getActiveInvitations(){
             var url = "/player/invitations_for_user/";
+            return $http.get(url).then(function(response){
+                return response.data;
+            });
+        }
+
+        function getWaitingResponseInvitations(){
+            var url = "/player/my_invitations/";
             return $http.get(url).then(function(response){
                 return response.data;
             });

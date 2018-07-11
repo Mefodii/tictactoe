@@ -1,0 +1,28 @@
+.invitation-yes-button {
+    background: linear-gradient(#0f9b0f, #000000);
+    cursor: pointer;
+}
+
+.invitation-no-button {
+    background: linear-gradient(#c31432, #000000);
+    cursor: pointer;
+}
+
+.badge-move {
+    background: linear-gradient(#2C5364, #203A43, #0F2027);
+    cursor: pointer;
+}
+
+.invitation-yes-button:hover {
+    transition: all 0.2s;
+    opacity: 0.7;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+}
+
+.invitation-no-button:hover {
+    transition: all 0.2s;
+    opacity: 0.7;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+}

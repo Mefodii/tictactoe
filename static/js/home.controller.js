@@ -42,6 +42,12 @@
             });
         };
 
+        $scope.cancelInvitation = function(invitation) {
+            InvitationListService.declineInvitation(invitation.id).then(function(response) {
+                removeActiveInvitation(invitation);
+            });
+        };
+
         function init(){
             GameListService.getActiveGames().then(function (data) {
                 $scope.activeGames = data;
@@ -51,12 +57,16 @@
             });
             InvitationListService.getActiveInvitations().then(function (data) {
                 $scope.activeInvitations = data;
+            })
+            InvitationListService.getWaitingResponseInvitations().then(function (data) {
+                $scope.waitingResponseInvitations = data;
             });
         }
 
         $scope.activeGames = [];
         $scope.finishedGames = [];
         $scope.activeInvitations = [];
+        $scope.waitingResponseInvitations = [];
 
         init();
 

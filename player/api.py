@@ -36,6 +36,14 @@ def invitations_for_user(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+def my_invitations(request):
+    if request.method == 'GET':
+        invitations = request.user.invitation_sent.all()
+        serializer = InvitationSerializer(invitations, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 @api_view(['POST'])
 def invitation_action(request):
     if request.method == 'POST':
