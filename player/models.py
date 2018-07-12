@@ -3,6 +3,13 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+INVITATION_ACTIONS = [
+    "ACCEPT",
+    "DECLINE",
+    "CANCEL"
+]
+
+
 # Create your models here.
 class Invitation(models.Model):
     from_user = models.ForeignKey(User, related_name="invitation_sent", on_delete=models.CASCADE)
@@ -16,3 +23,6 @@ class Invitation(models.Model):
                                verbose_name="Optional Message",
                                help_text="Some text")
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    def is_valid_action(self, action):
+        return action in INVITATION_ACTIONS;

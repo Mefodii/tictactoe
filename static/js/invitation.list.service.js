@@ -9,9 +9,19 @@
         this.getWaitingResponseInvitations = getWaitingResponseInvitations;
         this.acceptInvitation = acceptInvitation;
         this.declineInvitation = declineInvitation;
+        this.cancelInvitation = cancelInvitation;
+        this.inviteUser = inviteUser;
 
         function postInvitationActionHttp(invitation){
             var url = "/player/invitation_action/";
+            return $http.post(url, invitation)
+                .then(function(response){
+                    return response
+                });
+        }
+
+        function postNewInvitationHttp(invitation){
+            var url = "/player/new_invitation2/";
             return $http.post(url, invitation)
                 .then(function(response){
                     return response
@@ -32,22 +42,43 @@
             });
         }
 
-        function acceptInvitation(invitationId){
+        function postInvitationAction(invitationId, action){
             var invitation = {
                 id: invitationId,
-                accept: true
+                action: action
             };
             return postInvitationActionHttp(invitation).then(function(response){
                 return response;
             });
         }
 
-        function declineInvitation(invitationId){
+        function inviteUser(userId){
             var invitation = {
-                id: invitationId,
-                accept: false
+                from_user: userId,
+                to_user: userId
             };
-            return postInvitationActionHttp(invitation).then(function(response){
+            return postNewInvitationHttp(invitation).then(function(response){
+                return response;
+            });
+        }
+
+        function acceptInvitation(invitationId){
+            var action = "ACCEPT";
+            return postInvitationAction(invitationId, action).then(function(response){
+                return response;
+            });
+        }
+
+        function declineInvitation(invitationId){
+            var action = "DECLINE";
+            return postInvitationAction(invitationId, action).then(function(response){
+                return response;
+            });
+        }
+
+        function cancelInvitation(invitationId){
+            var action = "CANCEL";
+            return postInvitationAction(invitationId, action).then(function(response){
                 return response;
             });
         }

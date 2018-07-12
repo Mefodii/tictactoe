@@ -53,8 +53,11 @@
                     <span class="badge invitation-no-button" ng-click="cancelInvitation(invitation)">X</span>
                     </a>
                 </div>
-            {% endverbatim %}
             <p>
+                <select class="form-control" ng-options="user as user.username for user in userList"
+                        ng-model="userToInvite"></select>
+                <button class="btn btn-primary" ng-click="inviteUser()">Invite User</button>
+            {% endverbatim %}
                 <a class="btn btn-primary"
                    href="{% url 'player_new_invitation' %}">Send game invitation</a>
             </p>

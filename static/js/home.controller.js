@@ -2,9 +2,9 @@
     "use strict";
 
     angular.module("tictactoe.demo")
-        .controller("HomeController", [ "$scope", "$http", "GameListService", "InvitationListService", HomeController]);
+        .controller("HomeController", [ "$scope", "$http", "GameListService", "InvitationListService", "UserService", HomeController]);
 
-    function HomeController($scope, $http, GameListService, InvitationListService) {
+    function HomeController($scope, $http, GameListService, InvitationListService, UserService) {
 
         /*                  LIST MANIPULATION                     */
 
@@ -25,6 +25,10 @@
             removeElement($scope.activeInvitations, invitation);
         }
 
+        function removeWaitingResponseInvitation(invitation){
+            removeElement($scope.waitingResponseInvitations, invitation);
+        }
+
         function addActiveGame(game){
             addElement($scope.activeGames, game);
         }
@@ -43,8 +47,14 @@
         };
 
         $scope.cancelInvitation = function(invitation) {
-            InvitationListService.declineInvitation(invitation.id).then(function(response) {
-                removeActiveInvitation(invitation);
+            InvitationListService.cancelInvitation(invitation.id).then(function(response) {
+                removeWaitingResponseInvitation(invitation);
+            });
+        };
+
+        $scope.inviteUser = function() {
+            InvitationListService.inviteUser($scope.userToInvite).then(function(response) {
+//                addWaitingResponse(response.data);
             });
         };
 
@@ -61,12 +71,18 @@
             InvitationListService.getWaitingResponseInvitations().then(function (data) {
                 $scope.waitingResponseInvitations = data;
             });
+            UserService.getAllUsers().then(function (data) {
+                $scope.userList = data;
+            });
         }
 
         $scope.activeGames = [];
         $scope.finishedGames = [];
+
         $scope.activeInvitations = [];
         $scope.waitingResponseInvitations = [];
+
+        $scope.userList = [];
 
         init();
 
