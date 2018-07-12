@@ -55,7 +55,9 @@
                 </div>
             <p>
                 <select class="form-control" ng-options="user as user.username for user in userList"
-                        ng-model="userToInvite"></select>
+                        ng-model="userToInvite" ng-init="">
+                    <option value="">-- Select a use to invite --</option>
+                </select>
                 <button class="btn btn-primary" ng-click="inviteUser()">Send game invitation</button>
             {% endverbatim %}
             </p>

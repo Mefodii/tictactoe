@@ -19,7 +19,7 @@
             list.push(element)
         }
 
-        /*    ------------------===============---------------    */
+        /*    ------------------------=======================----------------------    */
 
         function removeActiveInvitation(invitation){
             removeElement($scope.activeInvitations, invitation);
@@ -32,6 +32,12 @@
         function addActiveGame(game){
             addElement($scope.activeGames, game);
         }
+
+        function addWaitingResponse(invitation){
+            addElement($scope.waitingResponseInvitations, invitation);
+        }
+
+        /*    ------------------------=======================----------------------    */
 
         $scope.acceptInvitation = function(invitation) {
             InvitationListService.acceptInvitation(invitation.id).then(function(response) {
@@ -54,7 +60,7 @@
 
         $scope.inviteUser = function() {
             InvitationListService.inviteUser($scope.userToInvite.id).then(function(response) {
-//                addWaitingResponse(response.data);
+               addWaitingResponse(response.data);
             });
         };
 

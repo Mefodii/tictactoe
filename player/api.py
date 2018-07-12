@@ -51,6 +51,8 @@ def new_invitation2(request):
         serializer = CreateInvitationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            invitation = get_object_or_404(Invitation, pk=serializer.data["id"])
+            serializer = InvitationSerializer(invitation)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
     return Response(request.data, status=status.HTTP_406_NOT_ACCEPTABLE)
