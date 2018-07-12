@@ -56,10 +56,8 @@
             <p>
                 <select class="form-control" ng-options="user as user.username for user in userList"
                         ng-model="userToInvite"></select>
-                <button class="btn btn-primary" ng-click="inviteUser()">Invite User</button>
+                <button class="btn btn-primary" ng-click="inviteUser()">Send game invitation</button>
             {% endverbatim %}
-                <a class="btn btn-primary"
-                   href="{% url 'player_new_invitation' %}">Send game invitation</a>
             </p>
         </div>
     </div>

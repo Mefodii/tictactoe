@@ -54,7 +54,6 @@
 
         function inviteUser(userId){
             var invitation = {
-                from_user: userId,
                 to_user: userId
             };
             return postNewInvitationHttp(invitation).then(function(response){

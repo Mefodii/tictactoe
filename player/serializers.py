@@ -16,3 +16,10 @@ class InvitationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invitation
         fields = '__all__'
+
+
+class CreateInvitationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Invitation
+        fields = '__all__'

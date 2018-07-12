@@ -53,7 +53,7 @@
         };
 
         $scope.inviteUser = function() {
-            InvitationListService.inviteUser($scope.userToInvite).then(function(response) {
+            InvitationListService.inviteUser($scope.userToInvite.id).then(function(response) {
 //                addWaitingResponse(response.data);
             });
         };

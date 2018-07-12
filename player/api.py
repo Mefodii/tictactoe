@@ -3,13 +3,10 @@ from rest_framework import permissions, generics, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from django.contrib.auth.models import User
-
-from gameplay.serializers import GameSerializer, MoveSerializer
-from gameplay.models import Game, Move
+from gameplay.serializers import GameSerializer
+from gameplay.models import Game
 from .models import Invitation
-from .serializers import InvitationSerializer
-from tictactoe.serializers import UserSerializer
+from .serializers import InvitationSerializer, CreateInvitationSerializer
 
 
 @api_view(['GET'])
@@ -50,8 +47,10 @@ def my_invitations(request):
 @api_view(['POST'])
 def new_invitation2(request):
     if request.method == "POST":
-        serializer = InvitationSerializer(data=request.data)
+        request.data["from_user"] = int(request.user.id)
+        serializer = CreateInvitationSerializer(data=request.data)
         if serializer.is_valid():
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
     return Response(request.data, status=status.HTTP_406_NOT_ACCEPTABLE)
