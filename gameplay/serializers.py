@@ -7,6 +7,7 @@ class GameSerializer(serializers.ModelSerializer):
     string = serializers.SerializerMethodField()
     moves_count = serializers.SerializerMethodField()
     absolute_url = serializers.SerializerMethodField()
+    status_string = serializers.SerializerMethodField()
 
     def get_absolute_url(self, game):
         return str(game.get_absolute_url())
@@ -16,6 +17,9 @@ class GameSerializer(serializers.ModelSerializer):
 
     def get_string(self, game):
         return str(game)
+
+    def get_status_string(self, game):
+        return str(game.status_string())
 
     class Meta:
         model = Game

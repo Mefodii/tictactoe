@@ -95,6 +95,18 @@ class Game(models.Model):
         else:
             return False
 
+    def status_string(self):
+        if self.status == "F":
+            return self.first_player.username + " moves";
+        if self.status == "S":
+            return self.second_player.username + " moves";
+        if self.status == "W":
+            return self.first_player.username + " WINS";
+        if self.status == "L":
+            return self.second_player.username + " WINS";
+        if self.status == "D":
+            return "DRAW";
+
     def __str__(self):
         return "{0} vs {1}".format(self.first_player, self.second_player)
 
