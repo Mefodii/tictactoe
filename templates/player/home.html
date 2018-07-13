@@ -15,9 +15,11 @@
             <h3>Active games</h3>
 
             <div class="list-group bg-info">
-                <a class="list-group-item list-group-item-info"
+                <a class="list-group-item list-group-item-info user-move"
                    href="{{ gameObj.absolute_url }}"
-                   ng-repeat="gameObj in activeGames">
+                   ng-repeat="gameObj in activeGames"
+                   ng-model="gameObj"
+                   ng-class="gameObj.class">
                     {{ gameObj.string }}
                     <span class="badge badge-move">{{ gameObj.moves_count }}</span><br>
                 </a>
