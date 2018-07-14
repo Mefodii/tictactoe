@@ -2,12 +2,15 @@
     "use strict";
 
     angular.module("tictactoe.demo", [])
-        .run(["$http", run]);
+        .run(["$http", "UserService", run]);
 
 
+    function run($http, UserService) {
+        $http.defaults.xsrfHeaderName = "X-CSRFToken";
+        $http.defaults.xsrfCookieName = "csrftoken";
 
-    function run($http) {
-        $http.defaults.xsrfHeaderName = "X-CSRFToken"
-        $http.defaults.xsrfCookieName = "csrftoken"
+        UserService.getCurrentUser().then(function (data) {
+            localStorage.currentUser = JSON.stringify(data);
+        });
     }
 }());

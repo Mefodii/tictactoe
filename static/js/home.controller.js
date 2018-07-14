@@ -2,9 +2,9 @@
     "use strict";
 
     angular.module("tictactoe.demo")
-        .controller("HomeController", [ "$scope", "$http", "GameListService", "InvitationListService", "UserService", HomeController]);
+        .controller("HomeController", [ "$scope", "GameListService", "InvitationListService", "UserService", HomeController]);
 
-    function HomeController($scope, $http, GameListService, InvitationListService, UserService) {
+    function HomeController($scope, GameListService, InvitationListService, UserService) {
 
         /*                  LIST MANIPULATION                     */
 
@@ -37,30 +37,33 @@
             addElement($scope.waitingResponseInvitations, invitation);
         }
 
-        function obtainGameCssClass(gameStatus){
+        function obtainGameCssClass(game){
+            var gameStatus = game.status;
+            var firstPlayerId = game.first_player;
+            var secondPlayerId = game.second_player;
             var cssClass = "";
-            if (gameStatus.indexOf("F") >= 0){
-                cssClass = "user-move";
+            if(gameStatus === "F" || gameStatus === "S"){
+                if ((gameStatus === "F" && firstPlayerId === $scope.currentUser.id) ||
+                    (gameStatus === "S" && secondPlayerId === $scope.currentUser.id)){
+                    cssClass = "user-move";
+                }
+                else{
+                    cssClass = "opponent-move";
+                }
             }
-            else if(gameStatus.indexOf("S") >= 0){
-                cssClass = "opponent-move";
+            else if(gameStatus === "W" || gameStatus === "L"){
+                if ((gameStatus === "W" && firstPlayerId === $scope.currentUser.id) ||
+                    (gameStatus === "L" && secondPlayerId === $scope.currentUser.id)){
+                    cssClass = "game-win";
+                }
+                else{
+                    cssClass = "game-lose";
+                }
             }
-            else if(gameStatus.indexOf("W") >= 0){
-                cssClass = "game-win";
-            }
-            else if(gameStatus.indexOf("L") >= 0){
-                cssClass = "game-lose";
-            }
-            else if(gameStatus.indexOf("D") >= 0){
+            else if(gameStatus === "D"){
                 cssClass = "game-draw";
             }
             return cssClass;
-        }
-
-        function setActiveGamesClasses(){
-            for(var i = 0; i < $scope.activeGames.length; i++){
-                $scope.activeGames[i].class = obtainGameCssClass($scope.activeGames[i].status)
-            }
         }
 
         /*    ------------------------=======================----------------------    */
@@ -91,26 +94,27 @@
         };
 
         $scope.setCssClass = function(gameObj){
-            gameObj.class = obtainGameCssClass(gameObj.status);
-        }
+            gameObj.class = obtainGameCssClass(gameObj);
+        };
 
         function init(){
             GameListService.getActiveGames().then(function (data) {
                 $scope.activeGames = data;
-                setActiveGamesClasses();
             });
             GameListService.getFinishedGames().then(function (data) {
                 $scope.finishedGames = data;
-//                setFinishedGamesClasses();
             });
             InvitationListService.getActiveInvitations().then(function (data) {
                 $scope.activeInvitations = data;
-            })
+            });
             InvitationListService.getWaitingResponseInvitations().then(function (data) {
                 $scope.waitingResponseInvitations = data;
             });
             UserService.getAllUsers().then(function (data) {
                 $scope.userList = data;
+            });
+            UserService.getCurrentUser().then(function (data) {
+                $scope.currentUser = data;
             });
         }
 
@@ -121,6 +125,7 @@
         $scope.waitingResponseInvitations = [];
 
         $scope.userList = [];
+        $scope.currentUser = JSON.parse(localStorage.currentUser);
 
         init();
 

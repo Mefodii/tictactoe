@@ -101,9 +101,9 @@ class Game(models.Model):
         if self.status == "S":
             return self.second_player.username + " moves";
         if self.status == "W":
-            return self.first_player.username + " WINS";
+            return self.first_player.username + " WON";
         if self.status == "L":
-            return self.second_player.username + " WINS";
+            return self.second_player.username + " WON";
         if self.status == "D":
             return "DRAW";
 

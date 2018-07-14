@@ -2,9 +2,9 @@
     "use strict";
 
     angular.module("tictactoe.demo")
-        .controller("BoardController", [ "$scope", "$http", "$location", "$interval", "$q", BoardController]);
+        .controller("BoardController", [ "$scope", "$http", "$location", "$interval", "$q", "UserService", BoardController]);
 
-    function BoardController($scope, $http, $location, $interval, $q) {
+    function BoardController($scope, $http, $location, $interval, $q, UserService) {
 //      INTERVALS
 
         var gameStatusCheckPromise = null;
@@ -49,24 +49,6 @@
             });
         }
 
-        function getUserHttp(id){
-            return $http.get("/users/" + id + "/").then(function(response){
-                return response.data;
-            });
-        }
-
-        function getGameStatusHttp(id){
-            return $http.get("/games/status/" + id + "/").then(function(response){
-                return response.data;
-            });
-        }
-
-        function getCurrentUserHttp(id){
-            return $http.get("/current_user/").then(function(response){
-                return response.data;
-            });
-        }
-
         function makeMoveHttp(move) {
           return $http.post("/games/make_move1/", move).then(
               function success(response) {
@@ -93,28 +75,19 @@
         }
 
         function getUserName(userId) {
-          return getUserHttp(userId).then(function(data) {
+          return UserService.getUser(userId).then(function(data) {
             return data.username;
-          });
-        }
-
-        function getMyId() {
-          return getCurrentUserHttp().then(function(data) {
-            return data.id;
           });
         }
 
 //      NAN
 
         function isMyMove(status) {
-            if(status.gameStatus.indexOf("F") >= 0 && status.myId == status.firstPlayerId){
+            if(status.gameStatus.indexOf("F") >= 0 && status.myId === status.firstPlayerId){
                 return true;
             }
-            else if(status.gameStatus.indexOf("S") >= 0 && status.myId == status.secondPlayerId){
-                return true;
-            }
-            else{
-                return false;
+            else {
+                return status.gameStatus.indexOf("S") >= 0 && status.myId === status.secondPlayerId;
             }
         }
 
@@ -131,8 +104,8 @@
             var i,j;
             for(i = 0; i < $scope.board.length; i++){
                 for(j = 0; j < $scope.board[i].length; j++){
-                    var value = $scope.board[i][j].val
-                    if (value != "X" && value != "O"){
+                    var value = $scope.board[i][j].val;
+                    if (value !== "X" && value !== "O"){
                         $scope.board[i][j].class = $scope.activeCellClass;
                     }
                 }
@@ -140,7 +113,7 @@
         }
 
         function opponentMoved(){
-            $q.all([refreshGame(), refreshMoves()]).then(function(result) {
+            $q.all([refreshGame(), refreshMoves()]).then(function() {
                 $scope.board = initializeBoard($scope.moves);
                 refreshStatus();
             });
@@ -183,7 +156,6 @@
 
         function initializeBoard(moves){
             var board = [];
-            var val = 0;
             for(var i = 0; i < 3; i++){
                 var row = [];
                 for(var j = 0; j < 3; j++){
@@ -215,28 +187,26 @@
 
         function isEmptyCell(cell){
             var value = cell.val;
-            if (value != "X" && value != "O"){
-                return true;
-            }
-            return false;
+            return value !== "X" && value !== "O";
+
         }
 
 //      HTML
 
         $scope.mouseOverCell = function(cell){
-            if($scope.status.iMove & isEmptyCell(cell)){
+            if($scope.status.iMove && isEmptyCell(cell)){
                 cell.tempVal = $scope.status.myChar;
             }
-        }
+        };
 
         $scope.mouseLeaveCell = function(cell){
-            if($scope.status.iMove & isEmptyCell(cell)){
+            if($scope.status.iMove && isEmptyCell(cell)){
                 cell.tempVal = "";
             }
-        }
+        };
 
         $scope.cellClick = function(cell) {
-            if($scope.status.iMove & isEmptyCell(cell)){
+            if($scope.status.iMove && isEmptyCell(cell)){
                 cell.tempVal = "";
                 makeMove(cell);
             }
@@ -246,12 +216,12 @@
             var url = $location.absUrl().split('/');
             $scope.current_game_id = url[url.length - 2];
             init();
-        }
+        };
 
         $scope.ingameLoad = function(gameIndex) {
             $scope.current_game_id = gameIndex;
             init();
-        }
+        };
 
         function makeMove(cell) {
             var move = {
@@ -265,7 +235,7 @@
                 refreshGame().then(function () {
                     $scope.board[move.y][move.x].class = $scope.inactiveCellClass;
                     refreshStatus();
-                    if($scope.status.gameStatus == "F" || $scope.status.gameStatus == "S"){
+                    if($scope.status.gameStatus === "F" || $scope.status.gameStatus === "S"){
                         startPollingGameStatusUpdate();
                     }
                 });
@@ -274,36 +244,34 @@
 
 //      INIT
         function createDefaultStatus(){
-            var status = {
-                    gameStatus: "",
-                    message: "",
-                    firstPlayerName: "",
-                    secondPlayerName: "",
-                    firstPlayerId: -1,
-                    secondPlayerId: -1,
-                    myId: -1,
-                    myChar: "",
-                    iMove: false
-                };
-
-            return status;
+            return {
+                gameStatus: "",
+                message: "",
+                firstPlayerName: "",
+                secondPlayerName: "",
+                firstPlayerId: -1,
+                secondPlayerId: -1,
+                myId: -1,
+                myChar: "",
+                iMove: false
+            };
         }
 
         function initializeStatus(game){
-            return $q.all([getMyId(), getUserName(game.first_player),
+            return $q.all([getUserName(game.first_player),
                             getUserName(game.second_player)]).then(function(result) {
                 var status = createDefaultStatus();
 
                 status.gameStatus = String(game.status);
                 status.firstPlayerId = game.first_player;
                 status.secondPlayerId = game.second_player;
-                status.myId = result[0];
+                status.myId = JSON.parse(localStorage.currentUser).id;
                 status.iMove = isMyMove(status);
-                status.firstPlayerName = result[1];
-                status.secondPlayerName = result[2];
+                status.firstPlayerName = result[0];
+                status.secondPlayerName = result[1];
                 status.message = refreshStatusMessage(status.gameStatus,
                                                         status.firstPlayerName, status.secondPlayerName);
-                if(status.myId == status.firstPlayerId){
+                if(status.myId === status.firstPlayerId){
                     status.myChar = "X";
                 }
                 else{
@@ -315,7 +283,7 @@
         }
 
         function init(){
-            $q.all([refreshGame(), refreshMoves()]).then(function(result) {
+            $q.all([refreshGame(), refreshMoves()]).then(function() {
                 $scope.board = initializeBoard($scope.moves);
                 initializeStatus($scope.game).then(function(result) {
                     $scope.status = result;
@@ -324,7 +292,7 @@
                     }
                     else{
                         boardInactive();
-                        if($scope.status.gameStatus == "F" || $scope.status.gameStatus == "S"){
+                        if($scope.status.gameStatus === "F" || $scope.status.gameStatus === "S"){
                             startPollingGameStatusUpdate();
                         }
                     }
@@ -339,6 +307,6 @@
         $scope.inactiveCellClass = "tictactoe-cell";
         $scope.activeCellClass = "tictactoe-cell-active";
 
-        $scope.current_game_id;
+        $scope.current_game_id = null;
     }
 }());
