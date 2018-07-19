@@ -75,11 +75,18 @@
 - Create html file which will be used
 
 -----
-<h4>Install Django Rest</h4>
+<h4>Other dependent packages</h4>
+<h5>Install Django Rest</h5>
 
 - Install package
  > pip install djangorestframework
 - Add 'rest_framework' to INSTALLED_APPS
+
+<h5>Install Crispy Forms</h5>
+
+- Install package
+ > pip install django-crispy-forms
+- Add 'crispy_forms' to INSTALLED_APPS
 
 -----
 <h4>Serialize model into JSON</h4>
