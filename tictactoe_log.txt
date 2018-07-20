@@ -1,0 +1,1 @@
+{"id":36,"string":"Mefodii vs Mefodii","moves_count":2,"absolute_url":"/games/details/36/","status_string":"Mefodii moves","start_time":"2018-07-05T13:33:45.315120Z","last_active":"2018-07-14T18:23:16.782000Z","status":"F","first_player":1,"second_player":1,"$$hashKey":"object:19","class":"user-move"}

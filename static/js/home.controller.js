@@ -93,6 +93,16 @@
             });
         };
 
+        $scope.testWS = function() {
+            var toSend = JSON.stringify({
+                test: JSON.stringify($scope.activeGames[0])
+            });
+            console.log(JSON.stringify(toSend));
+            chatSocket.send(JSON.stringify($scope.activeGames[0]));
+//            chatSocket.send(toSend);
+        };
+
+
         $scope.setCssClass = function(gameObj){
             gameObj.class = obtainGameCssClass(gameObj);
         };
@@ -138,8 +148,8 @@
 
         chatSocket.onmessage = function(e) {
             var data = JSON.parse(e.data);
-            var message = data['message'];
-            document.querySelector('#chat-log').value += (message + '\n');
+            var message = data.message;
+            document.querySelector('#chat-log').value += (JSON.stringify(data) + '\n');
         };
 
         chatSocket.onclose = function(e) {
@@ -156,10 +166,10 @@
         document.querySelector('#chat-message-submit').onclick = function(e) {
             var messageInputDom = document.querySelector('#chat-message-input');
             var message = messageInputDom.value;
-            var jsonMessage = {
-                message: message
-            }
-            chatSocket.send(jsonMessage);
+
+            chatSocket.send(JSON.stringify({
+            'message': message
+            }));
 
             messageInputDom.value = '';
         };
