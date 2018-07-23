@@ -67,6 +67,8 @@ def new_invitation2(request):
 def invitation_action(request):
     if request.method == 'POST':
         invitation = get_object_or_404(Invitation, pk=request.data["id"])
+        invitation_serializer = InvitationSerializer(invitation)
+
         action = request.data["action"]
         if not invitation.is_valid_action(action):
             return Response(request.data, status=status.HTTP_406_NOT_ACCEPTABLE)
@@ -80,14 +82,23 @@ def invitation_action(request):
                 first_player=invitation.to_user,
                 second_player=invitation.from_user,
             )
-            invitation.delete()
             serializer = GameSerializer(game)
+
+            socket_data = {"invitation": invitation_serializer.data,
+                           "game": serializer.data}
+            HomePageConsumer.send_notification(invitation_serializer.data["from_user"],
+                                               "INVITATION_ACCEPTED", socket_data)
+
+            invitation.delete()
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         # Invitation declined. Delete invitation.
         if action == "DECLINE":
             if not request.user == invitation.to_user:
                 return Response(request.data, status=status.HTTP_401_UNAUTHORIZED)
+
+            HomePageConsumer.send_notification(invitation_serializer.data["from_user"],
+                                               "INVITATION_DECLINED", invitation_serializer.data)
 
             invitation.delete()
             return Response(True, status=status.HTTP_200_OK)
@@ -96,6 +107,9 @@ def invitation_action(request):
         if action == "CANCEL":
             if not request.user == invitation.from_user:
                 return Response(request.data, status=status.HTTP_401_UNAUTHORIZED)
+
+            HomePageConsumer.send_notification(invitation_serializer.data["to_user"],
+                                               "INVITATION_CANCELED", invitation_serializer.data)
 
             invitation.delete()
             return Response(True, status=status.HTTP_200_OK)

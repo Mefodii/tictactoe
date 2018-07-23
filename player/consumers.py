@@ -76,17 +76,6 @@ class HomePageConsumer(WebsocketConsumer):
 
         self.accept()
 
-        data = {"test": "test2"}
-
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            {
-                'type': 'notification',
-                "notification_type": "DUMMY",
-                'data': json.dumps(data)
-            }
-        )
-
     def disconnect(self, close_code):
         # Leave room group
         async_to_sync(self.channel_layer.group_discard)(

@@ -2,7 +2,8 @@
     "use strict";
 
     angular.module("tictactoe.demo")
-        .controller("HomeController", [ "$scope", "GameListService", "InvitationListService", "UserService", HomeController]);
+        .controller("HomeController", [ "$scope", "GameListService", "InvitationListService",
+            "UserService", HomeController]);
 
     function HomeController($scope, GameListService, InvitationListService, UserService) {
 
@@ -21,14 +22,54 @@
 
         /*    ------------------------======= SOCKETS =======----------------------    */
 
+
+        var homepageSocket = initializeSocket();
+
+        homepageSocket.onmessage = function(e) {
+            var wsMessage = JSON.parse(e.data);
+            var type = wsMessage.notification_type;
+            var data = wsMessage.data;
+
+
+            if(type === "NEW_INVITATION"){
+                opponentInvited(data);
+            }
+            else if(type === "INVITATION_ACCEPTED"){
+                opponentAccepted(data);
+            }
+            else if(type === "INVITATION_DECLINED"){
+                opponentDeclined(data);
+            }
+            else if(type === "INVITATION_CANCELED"){
+                opponentCanceled(data);
+            }
+            else{
+                console.log("Cannot process " + type);
+            }
+
+            $scope.$apply();
+        };
+
+        homepageSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
         function initializeSocket(){
             return new WebSocket('ws://' + window.location.host + '/ws/homepage/');
         }
 
         /*    ------------------------=======================----------------------    */
 
+        function addActiveInvitation(invitation){
+            addElement($scope.activeInvitations, invitation);
+        }
+
         function removeActiveInvitation(invitation){
             removeElement($scope.activeInvitations, invitation);
+        }
+
+        function addWaitingResponse(invitation){
+            addElement($scope.waitingResponseInvitations, invitation);
         }
 
         function removeWaitingResponseInvitation(invitation){
@@ -37,10 +78,6 @@
 
         function addActiveGame(game){
             addElement($scope.activeGames, game);
-        }
-
-        function addWaitingResponse(invitation){
-            addElement($scope.waitingResponseInvitations, invitation);
         }
 
         function obtainGameCssClass(game){
@@ -72,7 +109,26 @@
             return cssClass;
         }
 
-        /*    ------------------------=======================----------------------    */
+        /*    ------------------------====== Opponent Actions ==============----------------------    */
+
+        function opponentInvited(invitation){
+            addActiveInvitation(invitation);
+        }
+
+        function opponentAccepted(data){
+            removeWaitingResponseInvitation(data.invitation);
+            addActiveGame(data.game);
+        }
+
+        function opponentDeclined(invitation){
+            removeWaitingResponseInvitation(invitation);
+        }
+
+        function opponentCanceled(invitation){
+            removeActiveInvitation(invitation);
+        }
+
+        /*    ------------------------====== My Actions ==============----------------------    */
 
         $scope.acceptInvitation = function(invitation) {
             InvitationListService.acceptInvitation(invitation.id).then(function(response) {
@@ -97,15 +153,6 @@
             InvitationListService.inviteUser($scope.userToInvite.id).then(function(response) {
                addWaitingResponse(response.data);
             });
-        };
-
-        $scope.testWS = function() {
-            var toSend = JSON.stringify({
-                test: JSON.stringify($scope.activeGames[0])
-            });
-            console.log(JSON.stringify($scope.activeGames[0]));
-            chatSocket.send(JSON.stringify($scope.activeGames[0]));
-//            chatSocket.send(toSend);
         };
 
 
@@ -145,27 +192,6 @@
 
         init();
 
-        var homepageSocket = initializeSocket();
-
-        homepageSocket.onmessage = function(e) {
-            var wsMessage = JSON.parse(e.data);
-            var type = wsMessage.notification_type;
-            var data = wsMessage.data;
-
-            if(type === "DUMMY"){
-                console.log("Cannot process that");
-            }
-            else if(type === "NEW_INVITATION"){
-                console.log("I can process that");
-            }
-            else{
-                console.log("Cannot process that");
-            }
-        };
-
-        homepageSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
-        };
 
     }
 }());
