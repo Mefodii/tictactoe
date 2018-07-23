@@ -19,6 +19,12 @@
             list.push(element)
         }
 
+        /*    ------------------------======= SOCKETS =======----------------------    */
+
+        function initializeSocket(){
+            return new WebSocket('ws://' + window.location.host + '/ws/homepage/');
+        }
+
         /*    ------------------------=======================----------------------    */
 
         function removeActiveInvitation(invitation){
@@ -97,7 +103,7 @@
             var toSend = JSON.stringify({
                 test: JSON.stringify($scope.activeGames[0])
             });
-            console.log(JSON.stringify(toSend));
+            console.log(JSON.stringify($scope.activeGames[0]));
             chatSocket.send(JSON.stringify($scope.activeGames[0]));
 //            chatSocket.send(toSend);
         };
@@ -139,39 +145,26 @@
 
         init();
 
+        var homepageSocket = initializeSocket();
 
-        var roomName = "test";
+        homepageSocket.onmessage = function(e) {
+            var wsMessage = JSON.parse(e.data);
+            var type = wsMessage.notification_type;
+            var data = wsMessage.data;
 
-        var chatSocket = new WebSocket(
-            'ws://' + window.location.host +
-            '/ws/chat/test/');
-
-        chatSocket.onmessage = function(e) {
-            var data = JSON.parse(e.data);
-            var message = data.message;
-            document.querySelector('#chat-log').value += (JSON.stringify(data) + '\n');
-        };
-
-        chatSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
-        };
-
-        document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#chat-message-submit').click();
+            if(type === "DUMMY"){
+                console.log("Cannot process that");
+            }
+            else if(type === "NEW_INVITATION"){
+                console.log("I can process that");
+            }
+            else{
+                console.log("Cannot process that");
             }
         };
 
-        document.querySelector('#chat-message-submit').onclick = function(e) {
-            var messageInputDom = document.querySelector('#chat-message-input');
-            var message = messageInputDom.value;
-
-            chatSocket.send(JSON.stringify({
-            'message': message
-            }));
-
-            messageInputDom.value = '';
+        homepageSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
         };
 
     }

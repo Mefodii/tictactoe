@@ -8,6 +8,8 @@ from gameplay.models import Game
 from .models import Invitation
 from .serializers import InvitationSerializer, CreateInvitationSerializer
 
+from .consumers import HomePageConsumer
+
 
 @api_view(['GET'])
 def active_games_for_user(request):
@@ -53,6 +55,9 @@ def new_invitation2(request):
             serializer.save()
             invitation = get_object_or_404(Invitation, pk=serializer.data["id"])
             serializer = InvitationSerializer(invitation)
+
+            HomePageConsumer.send_notification(request.data["to_user"], "NEW_INVITATION", serializer.data)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
     return Response(request.data, status=status.HTTP_406_NOT_ACCEPTABLE)
