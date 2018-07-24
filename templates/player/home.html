@@ -46,7 +46,7 @@
                 <div class="list-group bg-info">
                     <a class="list-group-item list-group-item-info"
                        ng-repeat="invitation in activeInvitations">
-                        {{ invitation.from_user_username }} invited you to play.
+                        <b><u>{{ invitation.from_user_username }}</u></b> invited you to play.
                     <span class="badge invitation-no-button" ng-click="declineInvitation(invitation)">N</span>
                     <span class="badge invitation-yes-button" ng-click="acceptInvitation(invitation)">Y</span><br>
                     </a>
@@ -55,7 +55,7 @@
                 <div class="list-group bg-info">
                     <a class="list-group-item list-group-item-info"
                        ng-repeat="invitation in waitingResponseInvitations">
-                        Waiting response from {{ invitation.to_user_username }}.
+                        Waiting response from <b><u>{{ invitation.to_user_username }}</u></b>.
                     <span class="badge invitation-no-button" ng-click="cancelInvitation(invitation)">X</span>
                     </a>
                 </div>

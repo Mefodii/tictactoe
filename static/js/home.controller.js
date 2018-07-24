@@ -8,6 +8,15 @@
     function HomeController($scope, GameListService, InvitationListService, UserService) {
 
         /*                  LIST MANIPULATION                     */
+        function getElementById(list, id){
+            for(var i = 0; i < list.length; i++){
+                if(list[i].id === id){
+                    return list[i];
+                }
+            }
+
+            return null;
+        }
 
         function removeElement(list, element){
             list.splice(
@@ -29,7 +38,6 @@
             var wsMessage = JSON.parse(e.data);
             var type = wsMessage.notification_type;
             var data = wsMessage.data;
-
 
             if(type === "NEW_INVITATION"){
                 opponentInvited(data);
@@ -116,16 +124,20 @@
         }
 
         function opponentAccepted(data){
-            removeWaitingResponseInvitation(data.invitation);
+            var invitationFromScope = getElementById($scope.waitingResponseInvitations, invitation.id);
+            removeWaitingResponseInvitation(data.invitationFromScope);
+
             addActiveGame(data.game);
         }
 
         function opponentDeclined(invitation){
-            removeWaitingResponseInvitation(invitation);
+            var invitationFromScope = getElementById($scope.waitingResponseInvitations, invitation.id);
+            removeWaitingResponseInvitation(invitationFromScope);
         }
 
         function opponentCanceled(invitation){
-            removeActiveInvitation(invitation);
+            var invitationFromScope = getElementById($scope.activeInvitations, invitation.id);
+            removeActiveInvitation(invitationFromScope);
         }
 
         /*    ------------------------====== My Actions ==============----------------------    */
