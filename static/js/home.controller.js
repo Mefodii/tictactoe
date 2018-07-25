@@ -124,7 +124,7 @@
         }
 
         function opponentAccepted(data){
-            var invitationFromScope = getElementById($scope.waitingResponseInvitations, invitation.id);
+            var invitationFromScope = getElementById($scope.waitingResponseInvitations, data.invitation.id);
             removeWaitingResponseInvitation(data.invitationFromScope);
 
             addActiveGame(data.game);
