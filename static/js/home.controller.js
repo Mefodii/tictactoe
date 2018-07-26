@@ -7,7 +7,7 @@
 
     function HomeController($scope, GameListService, InvitationListService, UserService) {
 
-        /*                  LIST MANIPULATION                     */
+        /*   ------------------------======= LIST MANIPULATION =======----------------------    */
         function getElementById(list, id){
             for(var i = 0; i < list.length; i++){
                 if(list[i].id === id){
@@ -86,6 +86,14 @@
 
         function addActiveGame(game){
             addElement($scope.activeGames, game);
+        }
+
+        function removeActiveGame(game){
+            removeElement($scope.activeGames, game);
+        }
+
+        function addFinishedGame(game){
+            addElement($scope.finishedGames, game);
         }
 
         function obtainGameCssClass(game){
@@ -167,12 +175,31 @@
             });
         };
 
+        $scope.forfeitGame = function($event, game) {
+            $event.stopPropagation();
+            GameListService.forfeitGame(game).then(function(response) {
+                removeActiveGame(game);
+                addFinishedGame(response.data);
+                console.log(response.data.status)
+            });
+        };
 
         $scope.setCssClass = function(gameObj){
             gameObj.class = obtainGameCssClass(gameObj);
         };
 
+        $scope.toGamePage = function(gameObj){
+            document.location.href = gameObj.absolute_url;
+        };
+
+        /*    ------------------------======== Init ==============----------------------    */
+
         function init(){
+            $scope.showActiveGames = true;
+            $scope.showFinishedGames = true;
+            $scope.showActiveInvitations = true;
+            $scope.showPendingInvitations = true;
+
             GameListService.getActiveGames().then(function (data) {
                 $scope.activeGames = data;
             });

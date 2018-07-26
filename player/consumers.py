@@ -3,7 +3,6 @@ from asgiref.sync import async_to_sync
 from channels.db import database_sync_to_async
 from channels.generic.websocket import WebsocketConsumer
 from django.contrib.auth.models import User
-from tictactoe.tests import write_to_log
 
 from channels.layers import get_channel_layer
 

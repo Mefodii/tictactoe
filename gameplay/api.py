@@ -9,6 +9,8 @@ from .serializers import GameSerializer, MoveSerializer
 from .models import Game, Move
 from .prevalidations import move_prevalidation
 
+from tictactoe.tests import write_to_log
+
 
 class GameViewSet(ModelViewSet):
     queryset = Game.objects.all()
@@ -46,7 +48,7 @@ def make_move(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
 @api_view(['GET'])
@@ -54,3 +56,17 @@ def is_my_move(request):
     if request.method == 'GET':
         game = get_object_or_404(Game, pk=int(request.GET.get("game","-1")))
         return Response(game.is_users_move(request.user), status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def forfeit_game(request):
+    if request.method == 'POST':
+        game = get_object_or_404(Game, pk=int(request.data))
+        if request.user == game.first_player or request.user == game.second_player:
+            if game.status in "FS":
+                game.forfeit_game(request.user)
+                game.save()
+                serializer = GameSerializer(game)
+                return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)

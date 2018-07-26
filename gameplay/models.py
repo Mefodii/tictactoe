@@ -95,6 +95,13 @@ class Game(models.Model):
         else:
             return False
 
+    def forfeit_game(self, user):
+        if self.status in "FS":
+            if self.first_player == user:
+                self.status = "L"
+            if self.second_player == user:
+                self.status = "W"
+
     def status_string(self):
         if self.status == "F":
             return self.first_player.username + " moves";
@@ -141,16 +148,16 @@ class Move(models.Model):
         self.game.update_after_move(self)
         self.game.save()
 
-    @staticmethod
-    def move_exists(game_id, x, y):
-        # game = get_object_or_404(Game, pk=game_id)
-        # if game:
-        # move = Move.objects.move_for_coords(game_id, x, y)
-        # if move:
-        #     return True
-        # else:
-        return False
-        # return False
+    # @staticmethod
+    # def move_exists(game_id, x, y):
+    #     # game = get_object_or_404(Game, pk=game_id)
+    #     # if game:
+    #     # move = Move.objects.move_for_coords(game_id, x, y)
+    #     # if move:
+    #     #     return True
+    #     # else:
+    #     return False
+    #     # return False
 
 
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
