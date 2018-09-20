@@ -5,39 +5,33 @@
 {% endblock %}
 
 {% block content %}
-    <h2 tooltip-html-unsafe="You entered this <strong>strong</strong> element!" tooltip-trigger="mouseenter" tooltip-placement="right">Hello {{ user.username }}</h2>
+    <h2>Hello {{ user.username }}</h2>
     Here is the list of all your games
-
 
     <div class="row" ng-controller="HomeController">
         <div class="col-md-6">
             {% verbatim %}
 
-            <h5></h5>
-            <div class="ttt-spinner" ng-click="showActiveGames=!showActiveGames">
-                <h3 class="ttt-inline">Active games</h3>
-                <h3 class="ttt-inline" ng-class="ttt-spinner"> ↑ </h3>
-                <h5></h5>
+            <div ng-click="showActiveGames=!showActiveGames">
+                <h3>Active games</h3>
             </div>
 
             <div class="list-group bg-info" ng-show="showActiveGames">
-                <a class="list-group-item list-group-item-info user-move"
+                <a class="list-group-item list-group-item-info"
                    ng-repeat="gameObj in activeGames"
                    ng-model="gameObj"
                    ng-init="setCssClass(gameObj)"
                    ng-click="toGamePage(gameObj)"
                    ng-class="gameObj.class">
                     <b><u>{{gameObj.first_player_username}}</u></b> vs <b><u>{{gameObj.second_player_username}}</u></b> - [{{ gameObj.status_string }}]
-                    <span class="badge no-button" ng-click="forfeitGame($event, gameObj)" tooltip="test">X</span>
+                    <span class="badge no-button" ng-click="forfeitGame($event, gameObj)">X</span>
                     <span class="badge badge-move">{{ gameObj.moves_count }}</span><br>
                 </a>
             </div>
 
 
             <div ng-click="showFinishedGames=!showFinishedGames">
-                <h3 class="ttt-inline">Finished games</h3>
-                <h3 class="ttt-inline" ng-class=""> ↑ </h3>
-                <h5></h5>
+                <h3>Finished games</h3>
             </div>
 
             <div class="list-group bg-info" ng-show="showFinishedGames">
